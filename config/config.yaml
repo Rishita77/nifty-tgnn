@@ -1,0 +1,33 @@
+# config/config.yaml
+project:
+  name: "nifty-tgnn"
+  seed: 42
+
+data:
+  start_date: "2024-01-01"
+  end_date: "2026-03-01"
+  train_end: "2024-12-31"
+  val_end: "2025-03-31"
+  test_end: "2025-12-31"
+  window_size: 5  # 5-day propagation window
+
+model:
+  embedding_dim: 768       # BERT hidden size
+  hidden_dim: 256
+  num_layers: 2
+  dropout: 0.3
+  lr: 0.001
+  epochs: 100
+  batch_size: 32
+  early_stopping_patience: 10
+
+graph:
+  similarity_threshold: 0.75  # cosine sim threshold for news edges
+  max_news_per_day: 50
+
+paths:
+  raw_news: "data/raw/news/"
+  raw_stocks: "data/raw/stocks/"
+  embeddings: "data/processed/embeddings/"
+  graphs: "data/processed/graphs/"
+  models: "checkpoints/"
