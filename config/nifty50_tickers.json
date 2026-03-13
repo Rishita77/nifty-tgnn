@@ -26,7 +26,7 @@
     {"symbol": "NTPC.NS", "name": "NTPC", "sector": "Utilities"},
     {"symbol": "ONGC.NS", "name": "ONGC", "sector": "Energy"},
     {"symbol": "JSWSTEEL.NS", "name": "JSW Steel", "sector": "Metals"},
-    {"symbol": "TATAMOTORS.NS", "name": "Tata Motors", "sector": "Auto"},
+    {"symbol": "TMCV.NS", "name": "Tata Motors", "sector": "Auto"},
     {"symbol": "TATASTEEL.NS", "name": "Tata Steel", "sector": "Metals"},
     {"symbol": "TECHM.NS", "name": "Tech Mahindra", "sector": "IT"},
     {"symbol": "GRASIM.NS", "name": "Grasim Industries", "sector": "Materials"},
