@@ -61,6 +61,18 @@ def download_nifty50_data(
     
     return results
 
+def preprocess_data(df : pd.DataFrame) -> pd.DataFrame:
+    """Removes redundant rows"""
+    
+    df = df.drop(index=[0, 1]) # Ticker metadata row
+    return df
+
 if __name__ == "__main__":
     data = download_nifty50_data()
     print(f"\n Data pipeline ready: {len(data)} stocks downloaded")
+    
+    path_dir = Path("data/raw/stocks")
+    for csv_file in path_dir.glob("*.csv"):
+        df = pd.read_csv(csv_file)
+        df = preprocess_data(df)
+        df.to_csv(csv_file)
