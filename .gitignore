@@ -6,3 +6,5 @@ data/raw/
 data/processed/
 *.egg-info/
 .ipynb_checkpoints/
+*.json
+*.csv
