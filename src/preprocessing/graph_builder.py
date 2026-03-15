@@ -87,9 +87,9 @@ class CompanyGraphBuilder:
         print(f"Tickers: {self.tickers}")
 
         for i, ticker_symbol in enumerate(self.tickers):
-            info = self.ticker_info_map[ticker_symbol] # Corrected way to get info
+            info = self.ticker_info_map[ticker_symbol] 
             sector_idx = self.all_sectors.index(info['sector']) if info['sector'] in self.all_sectors else -1
-            if sector_idx != -1: # Only set if sector exists
+            if sector_idx != -1: 
                 sector_onehot[i, sector_idx] = 1.0
 
             df_ticker = self.stock_data[self.stock_data['ticker'] == ticker_symbol]
@@ -97,9 +97,9 @@ class CompanyGraphBuilder:
             recent = df_ticker[mask].tail(lookback)
 
             if len(recent) >= 5:
-                # Calculate 5-day return (price change over 5 trading days)
+                
                 returns_5d[i] = (recent['Close'].iloc[-1] / recent['Close'].iloc[-5]) - 1
-                volatility[i] = recent['Close'].pct_change().std() # Daily volatility
+                volatility[i] = recent['Close'].pct_change().std() 
 
         x = torch.cat([sector_onehot, returns_5d, volatility], dim=-1)
 
@@ -107,8 +107,8 @@ class CompanyGraphBuilder:
 
         for i in range(N):
             for j in range(i + 1, N):
-                si = self.ticker_info_map[self.tickers[i]]['sector'] # Corrected
-                sj = self.ticker_info_map[self.tickers[j]]['sector'] # Corrected
+                si = self.ticker_info_map[self.tickers[i]]['sector'] 
+                sj = self.ticker_info_map[self.tickers[j]]['sector'] 
                 if si == sj:
                     edges.extend([[i, j], [j, i]])
                     weights.extend([1.0, 1.0])
@@ -116,9 +116,6 @@ class CompanyGraphBuilder:
         for t1, t2 in self.SUPPLY_CHAIN:
             if t1 in self.ticker_to_idx and t2 in self.ticker_to_idx:
                 i, j = self.ticker_to_idx[t1], self.ticker_to_idx[t2]
-                # Avoid adding duplicate edges if already added by same-sector logic,
-                # or ensure higher weight takes precedence.
-                # For simplicity here, just add them. Graph will handle duplicates later.
                 edges.extend([[i, j], [j, i]])
                 weights.extend([0.7, 0.7])
 
