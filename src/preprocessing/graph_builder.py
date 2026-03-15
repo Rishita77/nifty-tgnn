@@ -125,25 +125,18 @@ class CompanyGraphBuilder:
         return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
 
 if __name__ == "__main__":
-    # builder = NewsGraphBuilder(sim_threshold=0.5)
-    # embeddings = torch.load("data/processed/embeddings/embeddings_2024-01-01 (1).pt")
-
-    # # load articles
-    # with open("data/processed_articles4.json") as f:
-    #     articles = json.load(f)
-
-    # # load sentiments
-    # with open("data/processed_articles_with_sentiment_c.json") as f:
-    #     sentiments = json.load(f)
-
-    # # check
-    # # assert len(articles) == len(sentiments) == embeddings.shape[0]
-    # embedding_slice = embeddings[0:10]
-    # graph_data = builder.build_daily_news_graph(embedding_slice, sentiments[0:10], articles[0:10])
-    # print(graph_data)
+    builder = NewsGraphBuilder(sim_threshold=0.5)
+    embeddings = torch.load("data/processed/embeddings/embeddings_2024-01-01 (1).pt")
     
-    # company_config_file = "config/nifty50_tickers.json"
-    # company_config = json.load(open(company_config_file))
+    with open("data/processed_articles4.json") as f:
+        articles = json.load(f)
+
+    with open("data/processed_articles_with_sentiment_c.json") as f:
+        sentiments = json.load(f)
+
+    embedding_slice = embeddings[0:10]
+    graph_data = builder.build_daily_news_graph(embedding_slice, sentiments[0:10], articles[0:10])
+    print(graph_data)
     
     company_builder = CompanyGraphBuilder()
     company_graph = company_builder.build_company_graph(date_str="2024-01-01")
