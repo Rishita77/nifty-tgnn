@@ -1,5 +1,5 @@
 import torch, json
-from torch_geometric.data import Data
+from torch_geometric.data import Data, HeteroData
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
@@ -123,6 +123,36 @@ class CompanyGraphBuilder:
         edge_attr = torch.tensor(weights, dtype=torch.float) if weights else torch.zeros(0)
 
         return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+    
+def build_combined_graph(news_graph, company_graph, articles, ticker_to_idx):
+        """Link news and company graphs into a single HeteroData object."""
+        data = HeteroData()
+
+        data['news'].x = news_graph.x
+        data['company'].x = company_graph.x
+
+        data['news', 'similar_to', 'news'].edge_index = news_graph.edge_index
+        data['news', 'similar_to', 'news'].edge_attr = news_graph.edge_attr
+
+        data['company', 'related_to', 'company'].edge_index = company_graph.edge_index
+        data['company', 'related_to', 'company'].edge_attr = company_graph.edge_attr
+
+        mention_edges = []
+        mention_weights = []
+        for news_idx, article in enumerate(articles):
+            for ticker in article['matched_entities']:
+                if ticker in ticker_to_idx:
+                    company_idx = ticker_to_idx[ticker]
+                    mention_edges.append([news_idx, company_idx])
+                  
+                    sent = article['sentiment']['score']
+                    mention_weights.append(abs(sent) + 0.1)
+
+        if mention_edges:
+            data['news', 'mentions', 'company'].edge_index = torch.tensor(mention_edges).t()
+            data['news', 'mentions', 'company'].edge_attr = torch.tensor(mention_weights)
+
+        return data
 
 if __name__ == "__main__":
     builder = NewsGraphBuilder(sim_threshold=0.5)
@@ -141,3 +171,6 @@ if __name__ == "__main__":
     company_builder = CompanyGraphBuilder()
     company_graph = company_builder.build_company_graph(date_str="2024-01-01")
     print(company_graph)
+    
+    combined_graph = build_combined_graph(graph_data, company_graph, sentiments[0:10], company_builder.ticker_to_idx)
+print(combined_graph)
