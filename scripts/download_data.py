@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 def download_nifty50_data(
     tickers_path: str = "config/nifty50_tickers.json",
     output_dir: str = "data/raw/stocks",
-    start: str = "2024-01-01",
-    end: str = "2026-03-01"
+    start: str = "2025-02-07",
+    end: str = "2025-08-21"
 ) -> dict:
     """
     Download OHLCV data for all NIFTY 50 stocks.
